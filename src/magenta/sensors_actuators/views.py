@@ -11,4 +11,5 @@ def actuators(request):
 
 
 def dashboard(request):
-    return HttpResponse("Hey there you are on the dashboard page")
+    return render(request=request,
+                  template_name="sensors_actuators/index.html")
