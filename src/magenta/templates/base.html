@@ -12,28 +12,56 @@
     {% endblock meta %}
     <link rel="icon" href="{% static 'resources/images/favicon.ico'%}">
     <link href="{% static 'gentelella/css/bootstrap.min.css' %}" rel="stylesheet"/>
-    <link href="{% static 'font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'gentelella/fonts/css/font-awesome.min.css' %}" rel="stylesheet">
     {% block style %}
     {% endblock style %}
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
     {% block mainblock %}
-    <div class="container">
-        {% block nav %}
-        {% endblock nav %}
+    <div class="container body">
+        <div class="main_container">
+            <div class="top_nav">
+                {% block nav %}
+                {% endblock nav %}
+            </div>
 
-        <div>
             {% block content %}
             {% endblock content %}
+
+            <div class="right_col">
+                <footer class="footer">
+
+                    {% block footer %}
+                    {% endblock footer%}
+                    <div class="copyright-info">
+                        <p class="pull-right">&copy; 2017 Adrian Ioan Breazu ( breazuadrian at gmail dot com )</p>
+                    </div>
+                    <div class="copyright-info">
+                        <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a></p>
+                    </div>
+                    <div class="copyright-info">
+                        <p class="pull-right">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+                    </div>
+                    <div class="clearfix"></div>
+                </footer>
+            </div>
         </div>
     </div>
     {% endblock mainblock %}
-    <footer>
-        {% block footer %}
-        {% endblock footer%}
-        <p>&copy; 2017 AdrianIoanBreazu</p>
-        <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-    </footer>
+
+     <div id="custom_notifications" class="custom-notifications dsp_none">
+        {% block notifications %}
+        {% endblock notifications %}
+        <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
+        </ul>
+        <div class="clearfix"></div>
+        <div id="notif-group" class="tabbed_notifications"></div>
+    </div>
+
+    {% block javascript %}
+    <script src="{% static 'gentelella/js/jquery.min.js' %}"></script>
+    <script src="{% static 'gentelella/js/bootstrap.min.js' %}"></script>
+    {% endblock javascript %}
 </body>
 </html>
