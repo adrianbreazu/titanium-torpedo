@@ -1028,8 +1028,8 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <part name="U$2" library="esp8266modules" deviceset="ESP01" device=""/>
 <part name="RST" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="PRG" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
-<part name="R1" library="eagle-ltspice" deviceset="R" device="0207/10" value="10k"/>
-<part name="R2" library="eagle-ltspice" deviceset="R" device="0207/10" value="10k"/>
+<part name="R1" library="eagle-ltspice" deviceset="R" device="0207/10" value="1k"/>
+<part name="R2" library="eagle-ltspice" deviceset="R" device="0207/10" value="1k"/>
 </parts>
 <sheets>
 <sheet>

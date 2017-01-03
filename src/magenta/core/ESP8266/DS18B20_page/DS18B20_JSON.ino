@@ -17,7 +17,6 @@ const char* URL = "http://192.168.100.114:8000/sensors_actuators/ds18b20/";
 OneWire oneWire(GPIO_PIN); // read more here http://playground.arduino.cc/Learning/OneWire
 
 DallasTemperature sensor(&oneWire);
-WiFiServer server(80);
 
 void setup() {
     Serial.begin(115200);
@@ -39,8 +38,6 @@ void setup() {
     Serial.println("WiFi connected");
 
     delay(500);
-    server.begin();
-    Serial.println("Web server running. Waiting for the ESP IP...");
     Serial.println(WiFi.localIP());
 }
 

@@ -11496,7 +11496,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <part name="IC2" library="DS1820" deviceset="DS1820" device=""/>
 <part name="D2" library="diode" deviceset="1N4004" device=""/>
 <part name="C2" library="rcl" deviceset="CPOL-EU" device="E2.5-5" value="100uF"/>
-<part name="R1" library="resistor" deviceset="R-EU_" device="0207/12" value="10k"/>
+<part name="R1" library="resistor" deviceset="R-EU_" device="0207/12" value="1k"/>
 <part name="R2" library="resistor" deviceset="R-EU_" device="0207/12" value="4.7k"/>
 <part name="C1" library="rcl" deviceset="CPOL-EU" device="E2.5-5" value="100uf"/>
 <part name="IC3" library="linear" deviceset="LM340S" device=""/>
