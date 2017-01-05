@@ -1028,8 +1028,8 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <part name="U$2" library="esp8266modules" deviceset="ESP01" device=""/>
 <part name="RST" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
 <part name="PRG" library="SparkFun-Retired" deviceset="TAC_SWITCH" device="PTH"/>
-<part name="R1" library="eagle-ltspice" deviceset="R" device="0207/10" value="1k"/>
-<part name="R2" library="eagle-ltspice" deviceset="R" device="0207/10" value="1k"/>
+<part name="R1" library="eagle-ltspice" deviceset="R" device="0207/10" value="5k"/>
+<part name="R2" library="eagle-ltspice" deviceset="R" device="0207/10" value="5k"/>
 </parts>
 <sheets>
 <sheet>
@@ -1039,9 +1039,9 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <instance part="SV1" gate="G$1" x="-2.54" y="71.12"/>
 <instance part="U$2" gate="G$1" x="35.56" y="43.18"/>
 <instance part="RST" gate="S" x="45.72" y="60.96"/>
-<instance part="PRG" gate="S" x="27.94" y="66.04"/>
+<instance part="PRG" gate="S" x="30.48" y="63.5"/>
 <instance part="R1" gate="G$1" x="68.58" y="63.5" rot="R90"/>
-<instance part="R2" gate="G$1" x="60.96" y="63.5" rot="R90"/>
+<instance part="R2" gate="G$1" x="22.86" y="68.58" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -1064,25 +1064,25 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <junction x="17.78" y="58.42"/>
 <wire x1="17.78" y1="58.42" x2="17.78" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="RST" gate="S" pin="2"/>
-<wire x1="17.78" y1="58.42" x2="33.02" y2="58.42" width="0.1524" layer="91"/>
-<junction x="33.02" y="58.42"/>
-<wire x1="33.02" y1="58.42" x2="40.64" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="58.42" x2="35.56" y2="58.42" width="0.1524" layer="91"/>
+<junction x="35.56" y="58.42"/>
+<wire x1="35.56" y1="58.42" x2="40.64" y2="58.42" width="0.1524" layer="91"/>
 <pinref part="PRG" gate="S" pin="4"/>
-<wire x1="33.02" y1="63.5" x2="33.02" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="60.96" x2="35.56" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="3V3" class="0">
 <segment>
 <pinref part="SV1" gate="G$1" pin="5"/>
-<wire x1="5.08" y1="76.2" x2="60.96" y2="76.2" width="0.1524" layer="91"/>
-<wire x1="60.96" y1="76.2" x2="68.58" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="76.2" x2="22.86" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="76.2" x2="68.58" y2="76.2" width="0.1524" layer="91"/>
 <wire x1="68.58" y1="76.2" x2="73.66" y2="76.2" width="0.1524" layer="91"/>
 <wire x1="73.66" y1="76.2" x2="73.66" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="VCC"/>
 <wire x1="73.66" y1="43.18" x2="50.8" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="60.96" y1="68.58" x2="60.96" y2="76.2" width="0.1524" layer="91"/>
-<junction x="60.96" y="76.2"/>
+<wire x1="22.86" y1="73.66" x2="22.86" y2="76.2" width="0.1524" layer="91"/>
+<junction x="22.86" y="76.2"/>
 <junction x="68.58" y="76.2"/>
 <pinref part="R1" gate="G$1" pin="2"/>
 <wire x1="68.58" y1="68.58" x2="68.58" y2="76.2" width="0.1524" layer="91"/>
@@ -1095,14 +1095,6 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <pinref part="U$2" gate="G$1" pin="TXD"/>
 <wire x1="5.08" y1="55.88" x2="50.8" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="55.88" x2="50.8" y2="50.8" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="CH_PD" class="0">
-<segment>
-<pinref part="U$2" gate="G$1" pin="CH_PD"/>
-<pinref part="R2" gate="G$1" pin="1"/>
-<wire x1="50.8" y1="48.26" x2="60.96" y2="48.26" width="0.1524" layer="91"/>
-<wire x1="60.96" y1="48.26" x2="60.96" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="RST" class="0">
@@ -1124,8 +1116,11 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <pinref part="U$2" gate="G$1" pin="GPIO0"/>
 <wire x1="17.78" y1="45.72" x2="10.16" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="45.72" x2="10.16" y2="63.5" width="0.1524" layer="91"/>
+<pinref part="R2" gate="G$1" pin="1"/>
 <wire x1="10.16" y1="63.5" x2="22.86" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="PRG" gate="S" pin="2"/>
+<pinref part="PRG" gate="S" pin="1"/>
+<wire x1="22.86" y1="63.5" x2="25.4" y2="63.5" width="0.1524" layer="91"/>
+<junction x="22.86" y="63.5"/>
 </segment>
 </net>
 </nets>
