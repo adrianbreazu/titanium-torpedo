@@ -31,14 +31,15 @@ def dashboard(request):
 
 
 @csrf_exempt
-def getLastData(request, type, id):
+def getLastData(request, type, iot_id):
     data = {}
-    readvalue = ReadValue.objects.filter(type=type, id =id).order_by('-datetime')[:1]
+    iot = IoT.objects.get(pk=iot_id)
+    print(iot)
+    readvalue = ReadValue.objects.filter(type=type, IoT_id=iot).order_by('-datetime')[:1]
 
     for rv in readvalue:
         data["value"] = rv.value
         data["type"] = rv.type
-        data["id"] = rv.id
         data["datetime"] = rv.datetime
 
     return JsonResponse(data=data)
