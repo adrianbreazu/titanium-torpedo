@@ -2,22 +2,46 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.http import JsonResponse
 import json
-from .models import ReadValue, IoT
 import datetime
+from .models import ReadValue, IoT
 
 
 def sensors(request):
-    return HttpResponse("hey there you are on the sensors page")
+    try:
+
+        return HttpResponse("hey there you are on the sensors page")
+    except Exception as e:
+        print("error on dashboard: {0}".format(e))
+    finally:
+        print("done with dashboard")
 
 
 def actuators(request):
     return HttpResponse("Hey there you are on the actuators page")
 
 
+
 def dashboard(request):
     return render(request=request,
                   template_name="sensors_actuators/index.html")
+
+
+@csrf_exempt
+def getLastData(request, type, id):
+    data = {}
+    readvalue = ReadValue.objects.filter(type=type, id =id).order_by('-datetime')[:1]
+
+    for rv in readvalue:
+        data["value"] = rv.value
+        data["type"] = rv.type
+        data["id"] = rv.id
+        data["datetime"] = rv.datetime
+
+    return JsonResponse(data=data)
 
 
 @csrf_exempt
