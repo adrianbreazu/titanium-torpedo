@@ -6,13 +6,23 @@
 {% block content %}
 <div>
     <h1>Temperature data</h1>
-    {% for read_iot in iot_objects %}
-        <h2>{{ read_iot.IoT_id.location }} IoT data</h2>
-        <p><strong>Value:</strong> {{ read_iot.value }} </p>
-        <p><strong>Timestamp:</strong> {{ read_iot.datetime }} </p>
-        <br/>
-        <br/>
-        <br/>
-    {% endfor %}
+    <table class="table table-border">
+        <thdead>
+            <tr>
+                <th class="text-center">IoT location</th>
+                <th class="text-center">Value</th>
+                <th class="text-center">Timestamp</th>
+            </tr>
+        </thdead>
+        <tbody>
+        {% for read_iot in iot_objects %}
+            <tr>
+                <td class="text-center">{{ read_iot.IoT_id.location }}</td>
+                <td class="text-center">{{ read_iot.value }}</td>
+                <td class="text-center">{{ read_iot.datetime }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock content %}

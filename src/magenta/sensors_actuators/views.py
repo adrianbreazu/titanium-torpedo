@@ -28,10 +28,8 @@ def actuators(request):
 def dashboard(request):
     type = "temperature"
     context = {}
-    iot_objects = IoT.objects.order_by('id')
 
-    for iot_object in iot_objects:
-        context['iot_objects'] = ReadValue.objects.filter(type=type, IoT_id=iot_object).order_by('-datetime')[:1]
+    context['iot_objects'] = ReadValue.objects.filter(type=type).order_by('-datetime')[:20]
 
     context["title"] = "Dashboard"
 
