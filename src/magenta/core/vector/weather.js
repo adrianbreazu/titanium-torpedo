@@ -5,12 +5,13 @@ debugger;
 
 var request = require('request');
 var VectorWatch = require('vectorwatch-sdk');
-var vectorWatch = new VectorWatch();
 
+var vectorWatch = new VectorWatch();
 var logger = vectorWatch.logger;
 
-var location_1 = "http://ADD_YOUR_EXTERNAL_IP_AND_PORT_HERE/sensors_actuators/json/temperature/";
+var location_1 = "http://ADD_YOUR_EXTERNAL_IP_HERE/sensors_actuators/json/temperature/";
 var sensor = [1,2];
+var totalSchedules = 0;
 
 
 vectorWatch.on('config', function(event, response) {
@@ -102,6 +103,12 @@ vectorWatch.on('unsubscribe', function(event, response) {
     logger.info('exit unsubscribe');
 });
 
+vectorWatch.on('webhook', function (event, response, records) {
+    logger.info('on Webhook!');
+    response.send();
+    logger.info('exit Webhook!');
+});
+
 vectorWatch.on('schedule', function(records) {
     logger.info('on schdedule');
 
@@ -119,4 +126,19 @@ vectorWatch.on('schedule', function(records) {
             logger.error('on push user settings: ' + err.message);
         }
     });
+
+    // Once every 30 mins keep the heroku server alive.
+    if (totalSchedules % 6 == 0) {
+        keepAlive();
+    }
+
+    totalSchedules++;
 });
+
+function keepAlive() {
+    logger.info('keep alive');
+
+    //A request to Vector server on the webhook endpoint will trigger an outside request for the current application
+    var url = 'https://endpoint.vector.watch/VectorCloud/rest/v1/stream/'+process.env.STREAM_UUID+'/webhook';
+    request(url);
+}
