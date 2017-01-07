@@ -26,7 +26,17 @@ def actuators(request):
 
 
 def dashboard(request):
+    type = "temperature"
+    context = {}
+    iot_objects = IoT.objects.order_by('id')
+
+    for iot_object in iot_objects:
+        context['iot_objects'] = ReadValue.objects.filter(type=type, IoT_id=iot_object).order_by('-datetime')[:1]
+
+    context["title"] = "Dashboard"
+
     return render(request=request,
+                  context=context,
                   template_name="sensors_actuators/index.html")
 
 

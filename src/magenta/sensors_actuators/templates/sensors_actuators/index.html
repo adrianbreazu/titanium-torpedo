@@ -1,2 +1,18 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+
+{% block title%}{{ title }}{%endblock title%}
+
+{% block content %}
+<div>
+    <h1>Temperature data</h1>
+    {% for read_iot in iot_objects %}
+        <h2>{{ read_iot.IoT_id.location }} IoT data</h2>
+        <p><strong>Value:</strong> {{ read_iot.value }} </p>
+        <p><strong>Timestamp:</strong> {{ read_iot.datetime }} </p>
+        <br/>
+        <br/>
+        <br/>
+    {% endfor %}
+</div>
+{% endblock content %}
