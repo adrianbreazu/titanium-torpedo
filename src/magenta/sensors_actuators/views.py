@@ -26,7 +26,6 @@ def actuators(request):
     return HttpResponse("Hey there you are on the actuators page")
 
 
-
 def dashboard(request):
     type = "temperature"
     context = {}
@@ -38,6 +37,37 @@ def dashboard(request):
     return render(request=request,
                   context=context,
                   template_name="sensors_actuators/index.html")
+
+
+@csrf_exempt
+def getPeriodData(request):
+    if request.method == "POST":
+        retrieve_json_data = json.loads(request.body.decode('utf-8'))
+        period = int(retrieve_json_data['period'])
+        sensor_type = retrieve_json_data['type']
+        sensor_id = retrieve_json_data['id']
+        data = {}
+
+        try:
+            iot_obj = IoT.objects.get(pk=sensor_id)
+            readvalue = ReadValue.objects.filter(type=sensor_type, IoT_id=iot_obj).order_by('-datetime')[:period]
+            array = []
+
+            for rv in readvalue:
+                msg = {}
+                msg["value"] = rv.value
+                msg["datetime"] = rv.datetime
+                array.append(msg)
+
+            data['read'] = array
+
+            return JsonResponse(data=data)
+
+        except ObjectDoesNotExist:
+            return HttpResponse("404")
+
+    else:
+        return HttpResponse("404")
 
 
 @csrf_exempt
@@ -77,6 +107,7 @@ def ds18b20(request):
             return HttpResponse("Not OK")
     else:
         return HttpResponse("Not OK")
+
 
 @csrf_exempt
 def clujbike(request):
