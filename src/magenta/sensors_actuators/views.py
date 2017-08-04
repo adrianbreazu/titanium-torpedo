@@ -7,6 +7,8 @@ from django.core import serializers
 from django.http import JsonResponse
 import json
 import datetime
+import requests
+
 from .models import ReadValue, IoT
 
 
@@ -75,3 +77,34 @@ def ds18b20(request):
             return HttpResponse("Not OK")
     else:
         return HttpResponse("Not OK")
+
+@csrf_exempt
+def clujbike(request):
+    url = 'http://portal.clujbike.eu/Station/Read?Grid-sort=StationName-asc'
+    json_response = {}
+    json_station_array = []
+    json_station = {}
+
+    response = requests.post(url)
+    json_data = json.loads(response.text)
+    json_first_level = json_data['Data']
+
+    for level in json_first_level:
+        if (level['StationName'] == "G.Cosbuc"):
+            json_station['name'] = 'G.Cosbuc'
+            json_station['ocupate'] = level['OcuppiedSpots']
+            json_station['libere'] = level['EmptySpots']
+            json_station['status'] = level['Status']
+            json_station_array.append(json_station)
+            json_station={}
+        elif (level['StationName'] == "Piata Mihai Viteazul"):
+            json_station['name'] = 'Mihai.Viteazul'
+            json_station['ocupate'] = level['OcuppiedSpots']
+            json_station['libere'] = level['EmptySpots']
+            json_station['status'] = level['Status']
+            json_station_array.append(json_station)
+
+    json_response['data'] = json_station_array
+    print(json.dumps(json_response))
+
+    return JsonResponse(data=json_response)
