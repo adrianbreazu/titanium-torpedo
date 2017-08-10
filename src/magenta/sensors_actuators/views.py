@@ -102,11 +102,37 @@ def ds18b20(request):
                 datetime=datetime.datetime.now(),
                 IoT_id=iot_id
             )
-            return HttpResponse("OK")
+            return HttpResponse("200")
         except ObjectDoesNotExist:
-            return HttpResponse("Not OK")
+            return HttpResponse("404")
     else:
-        return HttpResponse("Not OK")
+        return HttpResponse("404")
+
+
+@csrf_exempt
+def store_sensor_data(request):
+    if request.method == "POST":
+        retrieve_json_data = json.loads(request.body.decode('utf-8'))
+        iot_pin = retrieve_json_data['pin']
+        iot_key = retrieve_json_data['key']
+        iot_value = retrieve_json_data['value']
+        iot_type = retrieve_json_data['type']
+
+        # return sensor id of sensor that has this pin and key content
+        try:
+            iot_id = IoT.objects.filter(pin=iot_pin, key=iot_key).get()
+            ReadValue.objects.create(
+                type=iot_type,
+                value=iot_value,
+                datetime=datetime.datetime.now(),
+                IoT_id=iot_id
+            )
+            return HttpResponse("200")
+        except ObjectDoesNotExist:
+            return HttpResponse("404")
+    else:
+        return HttpResponse("404")
+
 
 
 @csrf_exempt

@@ -38,7 +38,7 @@ $('#720_read').click(function() {
 function reload_data() {
     // make ajax call
     $.ajax({
-        url: 'http://192.168.1.11:8000/sensors_actuators/get_temp_data/',
+        url: 'http://127.0.0.1:8000/sensors_actuators/get_temp_data/',
         type: "POST",
         data: JSON.stringify({"period":period_data,"type":"temperature", "id":"1"}),
         contentType: "application/json; charset=utf-8",
