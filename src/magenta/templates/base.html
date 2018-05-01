@@ -13,34 +13,32 @@
     <link rel="icon" href="{% static 'resources/images/favicon.ico'%}">
     <link href="{% static 'gentelella/css/bootstrap.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'gentelella/fonts/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'gentelella/css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'gentelella/css/custom.css' %}" rel="stylesheet">
     {% block style %}
     {% endblock style %}
     <title>{% block title %}{% endblock title %}</title>
 </head>
-<body>
+<body class="pace-done nav-sm">
     {% block mainblock %}
     <div class="container body">
         <div class="main_container">
             <div class="top_nav">
-                {% block nav %}
-                {% endblock nav %}
+                <div class="nav_menu">
+                    {% block nav %}
+                    {% endblock nav %}
+                </div>
             </div>
+            <div class="right_col" role="main" style="min-height: 970px">
+                {% block content %}
+                {% endblock content %}
 
-            {% block content %}
-            {% endblock content %}
-
-            <div class="right_col">
                 <footer class="footer">
-
                     {% block footer %}
                     {% endblock footer%}
                     <div class="copyright-info">
                         <p class="pull-right">&copy; 2017 Adrian Ioan Breazu ( breazuadrian at gmail dot com )</p>
-                    </div>
-                    <div class="copyright-info">
                         <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a></p>
-                    </div>
-                    <div class="copyright-info">
                         <p class="pull-right">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
                     </div>
                     <div class="clearfix"></div>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+{% endblock style %}
+
+{% block title%}{{ title }}{%endblock title%}
+
+{% block content %}
+<div class="row tile_count" id="iot_tag">
+
+</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Relays page</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <div id="relays_div" class="col-md-12 col-sm-12 col-xs-12">
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="{% static 'resources/js/actuators.js' %}"></script>
+{% endblock javascript %}
