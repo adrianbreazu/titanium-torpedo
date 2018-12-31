@@ -15,4 +15,7 @@ urlpatterns = [
     url(r'^getRelayStatus/$', views.getRelayStatus, name="/"),
     url(r'^setRelayStatus/$', views.setRelayStatus, name="set_relay_status"),
     url(r'^resetRelays/$', views.resetRelays, name="reset_relays"),
+    url(r'^getPeriodIntervalData/$', views.getSensorDataForInterval, name="getPeriodIntervalData"),
 ]
+
+handler404 = views.handler404

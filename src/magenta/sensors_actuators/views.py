@@ -1,10 +1,11 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import JsonResponse
+from datetime import datetime
 import json
 import datetime
 import requests
@@ -12,14 +13,19 @@ import requests
 from .models import ReadValue, IoT
 
 
-def sensors(request):
-    try:
+def handler404(request):
+    return render(request, "404.html", status=404)
 
-        return HttpResponse("hey there you are on the sensors page")
-    except Exception as e:
-        print("error on dashboard: {0}".format(e))
-    finally:
-        print("done with dashboard")
+
+def sensors(request):
+    type = "temperature"
+    context = {}
+    context['iot_objects'] = ReadValue.objects.filter(type=type).order_by('-datetime')[:20]
+    context["title"] = "Sensor"
+
+    return render(request=request,
+                  context=context,
+                  template_name="sensors_actuators/index.html")
 
 
 def actuators(request):
@@ -30,14 +36,12 @@ def actuators(request):
 def dashboard(request):
     type = "temperature"
     context = {}
-
     context['iot_objects'] = ReadValue.objects.filter(type=type).order_by('-datetime')[:20]
-
     context["title"] = "Dashboard"
 
     return render(request=request,
                   context=context,
-                  template_name="sensors_actuators/index.html")
+                  template_name="sensors_actuators/dashboard.html")
 
 
 @csrf_exempt
@@ -65,6 +69,42 @@ def getIots(request):
 
 
 @csrf_exempt
+def getSensorDataForInterval(request):
+    response_json = {}
+    array = []
+        
+    if request.method == "POST":
+        retrieve_json_data = json.loads(request.body.decode('utf-8'))
+        
+        requestStartDate = datetime.datetime.strptime(retrieve_json_data['startPeriod'], "%Y-%m-%d %H:%M")
+        requestEndDate = datetime.datetime.strptime(retrieve_json_data['endPeriod'], "%Y-%m-%d %H:%M")
+        iot_id = retrieve_json_data['id']
+        
+        try:
+            iot_object = IoT.objects.get(pk=iot_id)
+            readvalue = ReadValue.objects.filter(IoT_id=iot_object, datetime__range=(requestStartDate, requestEndDate)).order_by('datetime')
+            
+            for rv in readvalue:
+                msg = {}
+                msg['datetime'] = rv.datetime.strftime('%Y-%m-%d %H:%M')
+                msg['value'] = rv.value
+                array.append(msg)
+            
+            response_json['id'] = iot_object.id
+            response_json['name'] = iot_object.name
+            response_json['results'] = array
+            return JsonResponse(data=response_json)
+        except ObjectDoesNotExist:
+            return HttpResponse("404")
+        except IndexError:
+            return HttpResponse("404")
+        except Exception as e:
+            return HttpResponse("404" + e)
+    else:
+        return HttpResponse("404")
+
+
+@csrf_exempt
 def getPeriodData(request):
     if request.method == "POST":
         retrieve_json_data = json.loads(request.body.decode('utf-8'))
@@ -86,10 +126,8 @@ def getPeriodData(request):
             data['read'] = array
 
             return JsonResponse(data=data)
-
         except ObjectDoesNotExist:
             return HttpResponse("404")
-
     else:
         return HttpResponse("404")
 
@@ -98,7 +136,6 @@ def getPeriodData(request):
 def getLastIotData(request, iot_id):
     data = {}
     iot = IoT.objects.get(pk=iot_id)
-    print(iot)
     readvalue = ReadValue.objects.filter(IoT_id=iot).order_by('-datetime')[:1]
 
     for rv in readvalue:
@@ -113,7 +150,6 @@ def getLastIotData(request, iot_id):
 def getLastData(request, type, iot_id):
     data = {}
     iot = IoT.objects.get(pk=iot_id)
-    print(iot)
     readvalue = ReadValue.objects.filter(type=type, IoT_id=iot).order_by('-datetime')[:1]
 
     for rv in readvalue:
@@ -199,10 +235,8 @@ def clujbike(request):
             json_station['libere'] = level['EmptySpots']
             json_station['status'] = level['Status']
             json_station_array.append(json_station)
-
     json_response['data'] = json_station_array
-    print(json.dumps(json_response))
-
+    
     return JsonResponse(data=json_response)
 
 @csrf_exempt
@@ -212,8 +246,7 @@ def getRelayStatus(request):
     json_data["SECRET_KEY"] = "__secret_key_here__"
     response = requests.post(url, data = json.dumps(json_data))
     json_data = json.loads(response.text)
-    print(json_data)
-
+    
     return JsonResponse(data=json_data)
 
 @csrf_exempt
@@ -222,14 +255,11 @@ def setRelayStatus(request):
     retrieve_json_data = json.loads(request.body.decode('utf-8'))
     json_request = {}
     json_request["SECRET_KEY"] = "__secret_key_here__"
-    print(retrieve_json_data)
     json_request["Relay"] = retrieve_json_data["Relay"]
     json_request["State"] = retrieve_json_data["Status"]
-    print(json.dumps(json_request))
     response = requests.post(url, data = json.dumps(json_request))
     json_data = json.loads(response.text)
-    print(json_data)
-
+    
     return JsonResponse(data=json_data)
 
 @csrf_exempt
@@ -238,6 +268,5 @@ def resetRelays(request):
     json_data = "{\"SECRET_KEY\": \"__secret_key_here__\"}"
     response = requests.post(url, data =json_data)
     json_data = json.loads(response.text)
-    print(json_data)
-
+    
     return JsonResponse(data=json_data)

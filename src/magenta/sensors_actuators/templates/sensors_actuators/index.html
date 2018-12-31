@@ -1,15 +1,10 @@
-{% extends "base.html" %}
-{% load staticfiles %}
-
-{% block title%}{{ title }}{%endblock title%}
-
-{% block content %}
+{% extends "base.html" %} {% load staticfiles %} {% block title%}{{ title }}{%endblock title%} {% block content %}
 <div class="row tile_count" id="iot_tag">
 
 </div>
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
+        <div class="x_panel">`
             <div class="x_title">
                 <h2>Table temperature outside</h2>
                 <div class="clearfix"></div>
@@ -24,13 +19,13 @@
                         </tr>
                     </thdead>
                     <tbody>
-                    {% for read_iot in iot_objects %}
+                        {% for read_iot in iot_objects %}
                         <tr>
                             <td class="text-center">{{ read_iot.IoT_id.location }}</td>
                             <td class="text-center">{{ read_iot.value }}</td>
                             <td class="text-center">{{ read_iot.datetime }}</td>
                         </tr>
-                    {% endfor %}
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -38,36 +33,36 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-ms-12 col-sm-12 col-xs-12">
-        <div class="x_panel">
-            <div class="x_title">
-                <h2>Temperature sensor</h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-database"></i></a>
-                        <ul class="dropdown-menu" role="menu" id="iot_list">
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a id="24_read" href="#">last 24 reads</a></li>
-                            <li><a id="48_read" href="#">last 48 reads</a></li>
-                            <li><a id="360_read" href="#">last 360 reads</a></li>
-                            <li><a id="720_read" href="#">last 720 reads</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-            <div class="x_content">
-                <canvas id="temp_canvas" width="700" height="300"></canvas>
+    <div class="col-sm-12 col-md-12 col-xs-12">
+        <div class="dashboard_graph">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Temperature sensor</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-database"></i></a>
+                            <ul class="dropdown-menu" role="menu" id="iot_list">
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a id="24_read" href="#">last 24 reads</a></li>
+                                <li><a id="48_read" href="#">last 48 reads</a></li>
+                                <li><a id="360_read" href="#">last 360 reads</a></li>
+                                <li><a id="720_read" href="#">last 720 reads</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <canvas id="temp_canvas" class="float-base" width="720" height="540"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock content %}
-
-{% block javascript %}
+{% endblock content %} {% block javascript %}
 <script src="{% static 'resources/js/script.js' %}"></script>
 {% endblock javascript %}

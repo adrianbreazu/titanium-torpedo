@@ -1,68 +1,112 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Home Automation system using a Raspberry Pi board and IoT devices" >
+    <meta name="description" content="Home Automation system using a Raspberry Pi board and IoT devices">
     <meta name="author" content="Adrian Ioan Breazu">
-    <meta name="contact" content="breazuadrian at gmail dot com">
-    {% block meta%}
-    {% endblock meta %}
+    <meta name="contact" content="breazuadrian at gmail dot com"> {% block meta%} {% endblock meta %}
     <link rel="icon" href="{% static 'resources/images/favicon.ico'%}">
-    <link href="{% static 'gentelella/css/bootstrap.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'gentelella/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'gentelella/fonts/css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="{% static 'gentelella/css/animate.min.css' %}" rel="stylesheet">
-    <link href="{% static 'gentelella/css/custom.css' %}" rel="stylesheet">
-    {% block style %}
-    {% endblock style %}
+    <link href="{% static 'gentelella/css/custom.css' %}" rel="stylesheet"> {% block style %} {% endblock style %}
+    <link href="{% static 'gentelella/css/icheck/flat/green.css' %}" rel="stylesheet">
+    <script src="{% static 'gentelella/js/jquery.min.js' %} "></script>
+
     <title>{% block title %}{% endblock title %}</title>
 </head>
-<body class="pace-done nav-sm">
+
+<body class="nav-md">
     {% block mainblock %}
     <div class="container body">
         <div class="main_container">
-            <div class="top_nav">
-                <div class="nav_menu">
-                    {% block nav %}
-                    {% endblock nav %}
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="/" class="site_title"><i class="fa fa-home"></i> <span> Dashboard </span></a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br/>
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <h3>Sensors</h3>
+                            <ul class="nav side-menu">
+                                <li><a><i class="fa fa-area-chart"></i> Sensors <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none;">
+                                        <li><a href="/sensors_actuators/sensors/">Overview</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="menu_section">
+                            <h3>Actuators</h3>
+                            <ul class="nav side-menu">
+                                <li><a><i class="fa fa-gears"></i> Actuators <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu" style="display: none;">
+                                        <li><a href="/sensors_actuators/actuators/">Overview</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% block nav-left-col %} {% endblock nav-left-col %}
                 </div>
             </div>
-            <div class="right_col" role="main" style="min-height: 970px">
-                {% block content %}
-                {% endblock content %}
-
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav class="" role="navigation">
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+                        {% block nav %} {% endblock nav %}
+                    </nav>
+                </div>
+            </div>
+            <div class="right_col" role="main">
+                {% block content %} {% endblock content %}
+                <div class="">
+                    <br/>
+                </div>
                 <footer class="footer">
-                    {% block footer %}
-                    {% endblock footer%}
-                    <div class="copyright-info">
-                        <p class="pull-right">&copy; 2017 Adrian Ioan Breazu ( breazuadrian at gmail dot com )</p>
-                        <p class="pull-right">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a></p>
-                        <p class="pull-right">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+                    <div class="">
+                        {% block footer %} {% endblock footer%}
+                        <p class="pull-right ">&copy; 2017 Adrian Ioan Breazu ( breazuadrian at gmail dot com )</p>
+                        <p class="pull-right ">Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com ">Colorlib</a></p>
+                        <p class="pull-right">Icons made by <a href="http://www.freepik.com " title="Freepik ">Freepik</a> from <a href="http://www.flaticon.com " title="Flaticon ">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/
+                                        " title="Creative Commons BY 3.0 " target="_blank ">CC 3.0 BY</a></p>
                     </div>
                     <div class="clearfix"></div>
                 </footer>
             </div>
         </div>
     </div>
+
     {% endblock mainblock %}
 
-     <div id="custom_notifications" class="custom-notifications dsp_none">
-        {% block notifications %}
-        {% endblock notifications %}
-        <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
+    <div id="custom_notifications " class="custom-notifications dsp_none">
+        {% block notifications %} {% endblock notifications %}
+        <ul class="list-unstyled notifications clearfix " data-tabbed_notifications="notif-group ">
         </ul>
-        <div class="clearfix"></div>
-        <div id="notif-group" class="tabbed_notifications"></div>
+        <div class="clearfix "></div>
+        <div id="notif-group " class="tabbed_notifications "></div>
     </div>
 
 
-    <script src="{% static 'gentelella/js/jquery.min.js' %}"></script>
-    <script src="{% static 'gentelella/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'gentelella/js/moment/moment.min.js' %}"></script>
-    <script src="{% static 'gentelella/js/chartjs/chart.min.js' %}"></script>
-    {% block javascript %}
-    {% endblock javascript %}
+    <script src="{% static 'gentelella/js/bootstrap.min.js' %} "></script>
+    <script src="{% static 'gentelella/js/nicescroll/jquery.nicescroll.min.js' %} "></script>
+    <script src="{% static 'gentelella/js/progressbar/bootstrap-progressbar.min.js' %} "></script>
+    <script src="{% static 'gentelella/js/icheck/icheck.min.js' %}"></script>
+    <script src="{% static 'gentelella/js/custom.js' %}"></script>
+    <script src="{% static 'gentelella/js/moment/moment.min.js' %} "></script>
+    <script src="{% static 'gentelella/js/chartjs/chart.min.js' %} "></script>
+    {% block javascript %} {% endblock javascript %}
 </body>
+
 </html>
