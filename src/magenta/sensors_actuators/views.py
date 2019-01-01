@@ -76,7 +76,7 @@ def getIotReadingErrors(request):
         iot_objects = IoT.objects.filter(status="active").order_by("id")
         try:
             for iot in iot_objects:
-                readvalue = ReadValue.objects.filter(IoT_id=iot).order_by('datetime')[:1]
+                readvalue = ReadValue.objects.filter(IoT_id=iot).order_by('-datetime')[:1]
                 
                 for rv in readvalue:
                     oneHourLater = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=1)
