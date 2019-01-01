@@ -87,3 +87,28 @@ var selected_iot_id = 1;
             alert("Please fill a start and an end date");
     });
 })();
+
+//notify user if a sensor missed the data sending in the last hour
+(function() {
+    $.ajax({
+        url: 'http://127.0.0.1:8080/sensors_actuators/getIotReadingErrors/',
+        type: 'POST',
+        data: '{}',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: false,
+        success: function(message) {
+            $.each(message['response'], function(index, value) {
+                new PNotify({
+                    title: 'Cannot read data from sensor ' + value,
+                    text: 'Please investigate malfunction.',
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
+            });
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+})();

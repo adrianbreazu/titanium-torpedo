@@ -69,6 +69,25 @@ def getIots(request):
 
 
 @csrf_exempt
+def getIotReadingErrors(request):
+    response_json ={}
+    iot_array = []
+    if request.method == "POST":
+        iot_objects = IoT.objects.filter(status="active").order_by("id")
+        try:
+            for iot in iot_objects:
+                readvalue = ReadValue.objects.filter(IoT_id=iot).order_by('datetime')[:1]
+                
+                for rv in readvalue:
+                    oneHourLater = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=1)
+                    if (rv.datetime < oneHourLater):
+                        iot_array.append(iot.name)
+            response_json['response'] = iot_array                   
+            return JsonResponse(data=response_json)
+        except ObjectDoesNotExist:
+            HttpResponse("404")
+
+@csrf_exempt
 def getSensorDataForInterval(request):
     response_json = {}
     array = []
