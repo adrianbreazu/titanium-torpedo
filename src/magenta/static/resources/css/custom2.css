@@ -1,0 +1,10 @@
+div #garden_div {
+    position: relative;
+    width: 580px;
+    height: 400px;
+}
+
+.select-area {
+    fill: aqua;
+    opacity: 0.8;
+}

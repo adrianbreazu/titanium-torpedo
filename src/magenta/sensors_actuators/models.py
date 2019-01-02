@@ -23,7 +23,7 @@ class CommunicationModel(models.Model):
     URL = models.CharField(max_length=500)
     RequestType = models.CharField(max_length=100, help_text="GET/POST/etc")
     RequestModel = models.CharField(max_length=500, help_text="GET/POST model")
-    IoT_id = models.ForeignKey(IoT)
+    IoT_id = models.ForeignKey('IoT', on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.IoT_id) + "|" + self.Address
@@ -34,7 +34,8 @@ class ReadValue(models.Model):
     type = models.CharField(max_length=100, help_text="temperature, pressure, humidity,etc")
     value = models.CharField(max_length=100)
     datetime = models.DateTimeField()
-    IoT_id = models.ForeignKey(IoT)
+    IoT_id = models.ForeignKey('IoT', on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.IoT_id) + "|" + self.type + "|" + str(self.datetime)
+
