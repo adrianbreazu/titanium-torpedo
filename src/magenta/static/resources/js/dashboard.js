@@ -112,3 +112,22 @@ var selected_iot_id = 1;
         }
     });
 })();
+
+//populate data
+(function() {
+    // add this for each sensor
+    $.ajax({
+        url: 'http://127.0.0.1:8080/sensors_actuators/json/1',
+        type: 'POST',
+        data: '{}',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: false,
+        success: function(message) {
+            $('#temp_room').text(message['value']);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+})();

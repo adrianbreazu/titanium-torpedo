@@ -4,6 +4,37 @@ div #garden_div {
     height: 400px;
 }
 
+div .first_plan_temp {
+    position: absolute;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    background-color: white;
+    color: black;
+}
+
+div .second_plan_temp {
+    position: absolute;
+    top: 50%;
+    left: 57%;
+    background-color: white;
+    color: black;
+}
+
+div .outside_temp {
+    position: absolute;
+    top: 50%;
+    left: 75%;
+    background-color: white;
+    color: black;
+}
+
+div .main_div {
+    position: relative;
+    width: 580px;
+    height: 400px;
+}
+
 .select-area {
     fill: aqua;
     opacity: 0.8;
