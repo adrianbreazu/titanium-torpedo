@@ -1,8 +1,7 @@
 {% extends "base.html" %} {% load staticfiles %} {% block title%} Dashboard {%endblock title%} {% block style %}
 <link rel="stylesheet" href="{% static 'puikinsh/css/bootstrap-datetimepicker.min.css' %}">
 <link rel="stylesheet" href="{% static 'gentelella/css/bootstrap-datetimepicker.min.css' %}">
-<link rel="stylesheet" href="{% static 'gentelella/css/bootstrap-datetimepicker.min.css' %}">
-<link rel="stylesheet" href="{% static 'gentelella/css/bootstrap-datetimepicker.min.css' %}"> {% endblock style %} {% block content %}
+<link rel="stylesheet" href="{% static 'resources/css/custom2.css' %}"> {% endblock style %} {% block content %}
 
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -45,6 +44,32 @@
             <div class="clearfix"></div>
             <div class="x_content">
                 <canvas id="sensor_data_canvas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="first_plan" class="main_div">
+            {% include 'sensors_actuators/first_plan.svg' %}
+            <div class="first_plan_temp">
+                <p>Temp: <strong><span id="temp_room">xx.xx</span></strong></p>
+            </div>
+            <div class="outside_temp">
+                <p>Temp: <strong><span id="temp_outside">xx.xx</span></strong></p>
+                <p>Pressure: <strong><span id="pressure_outside">xxxx</span></strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="second_plan" class="main_div">
+            {% include 'sensors_actuators/second_plan.svg' %}
+            <div class="second_plan_temp">
+                <p>Temp: <strong><span id="temp_room_2">xx.xx</span></strong></p>
             </div>
         </div>
     </div>
