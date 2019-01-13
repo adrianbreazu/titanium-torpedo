@@ -90,3 +90,4 @@ celerybeat-schedule
 
 # Rope project settings
 .ropeproject
+.vscode/settings.json

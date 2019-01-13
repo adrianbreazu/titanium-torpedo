@@ -9,7 +9,6 @@ urlpatterns = [
     url(r'^store_data/$', views.store_sensor_data, name="store_sensor_data"),
     url(r'^json/(?P<type>(\w+))/(?P<iot_id>[0-9]+)$', views.getLastData, name="getLastData"),
     url(r'^json/(?P<iot_id>[0-9]+)$', views.getLastIotData, name='getLastIotData'),
-    url(r'^clujbike/$', views.clujbike, name="clujbike"),
     url(r'^get_temp_data/$', views.getPeriodData, name="get_temp_data"),
     url(r'^get_iots/$', views.getIots, name="iots"),
     url(r'^getRelayStatus/$', views.getRelayStatus, name="/"),
