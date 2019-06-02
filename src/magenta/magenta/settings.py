@@ -23,10 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+w)u7w*d^^m!4sjt!2&o%*rh=^i8x7qdnzs9_2nf9%)9ml*t9r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -121,3 +120,64 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
 STATIC_ROOT = os.path.join(BASE_DIR, "sfiles")
+LOG_LEVEL = 'DEBUG'
+LOG_LEVEL_DB = 'DEBUG'
+LOG_LEVEL_REST = 'DEBUG'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s|%(asctime)s|%(module)s|%(message)s',
+            'datefmt': "%Y-%b-%d %H:%M:%S",
+        },
+        'simple': {
+            'format': '%(levelname)s|%(asctime)s|%(message)s',
+            'datefmt': "%Y-%b-%d %H:%M:%S",
+        },
+    },
+    'handlers': {
+        'debug_file': {
+            'level': LOG_LEVEL,
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 500000,
+            'backupCount': 5,
+            'filename': 'logs/django_debug.log',
+            'formatter': 'verbose',
+        },
+        'db_file': {
+            'level': LOG_LEVEL_DB,
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 500000,
+            'backupCount': 5,
+            'filename': 'logs/django_db.log',
+            'formatter': 'verbose',
+        },
+        'rest_file': {
+            'level': LOG_LEVEL_REST,
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 500000,
+            'backupCount': 2,
+            'filename': 'logs/django_rest.log',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'sensors_actuators': {
+            'handlers': ['debug_file'],
+            'level': LOG_LEVEL,
+            'propagate': True,
+        },
+        'django.db': {
+            'handlers': ['db_file'],
+            'level': LOG_LEVEL_DB,
+            'propagate': False
+        },
+        'django': {
+            'handlers': ['rest_file'],
+            'level': LOG_LEVEL_REST,
+            'propagate': False
+        },
+    },
+}

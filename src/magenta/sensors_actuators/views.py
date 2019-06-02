@@ -6,22 +6,30 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import JsonResponse
 from datetime import datetime
+from django.conf import settings
+import os
 import json
 import datetime
 import requests
+import logging
 
 from .models import ReadValue, IoT
 
+logger = logging.getLogger(__name__)
+TEMPERATURE_TYPE = "temperature"
+
 
 def handler404(request):
+    logger.error ("404 generated for request:{0}".format(request))
     return render(request, "404.html", status=404)
 
 
 def sensors(request):
-    type = "temperature"
+    logger.debug("In sensors with request: {0}".format(request))
     context = {}
-    context['iot_objects'] = ReadValue.objects.filter(type=type).order_by('-datetime')[:20]
+    context['iot_objects'] = ReadValue.objects.filter(type=TEMPERATURE_TYPE).order_by('-datetime')[:20]
     context["title"] = "Sensor"
+    logger.debug("Send response for sensor type={0}, with context: {1}".format(type,context))
 
     return render(request=request,
                   context=context,
@@ -29,15 +37,15 @@ def sensors(request):
 
 
 def actuators(request):
+    logger.debug("In actuators with request: {0}".format(request))
     return render(request=request,
                   template_name="sensors_actuators/actuators.html")
 
 
 def dashboard(request):
-    type = "temperature"
+    logger.debug("In dashboard with request: {0}".format(request))
     context = {}
-    context['iot_objects'] = ReadValue.objects.filter(type=type).order_by('-datetime')[:20]
-    context["title"] = "Dashboard"
+    logger.debug("Dashboard response: {0}".format(context))
 
     return render(request=request,
                   context=context,
@@ -46,7 +54,8 @@ def dashboard(request):
 
 @csrf_exempt
 def getIots(request):
-    data = {}
+    logger.debug("In getIots: request:{0}".format(request))
+    response_json = {}
     if request.method == "POST":
         try:
             iots= IoT.objects.filter(status="active").order_by("id")
@@ -59,17 +68,28 @@ def getIots(request):
                 msg['location'] = iot.location
                 msg['description'] = iot.description
                 array.append(msg)
-            data['iot'] = array
+            response_json['iot'] = array
+            
+            logger.debug("In getIots: JSON response ready with value:{0}".format(response_json))
 
-            return JsonResponse(data=data)
-        except ObjectDoesNotExist:
+            return JsonResponse(data=response_json)
+        except ObjectDoesNotExist as oe:
+            logger.warning("In getIots: ObjectDoesNotExist exception raised: {0}".format(oe))
+
+            return HttpResponse("404")
+        except Exception as ex:
+            logger.error("In getIots: Exception raised: {0}".format(ex))
+
             return HttpResponse("404")
     else:
+        logger.error("In getIots: wrong request method: {0}".format(request.method))
+
         return HttpResponse("404")
 
 
 @csrf_exempt
 def getIotReadingErrors(request):
+    logger.debug("In getIotReadingErrors: request:{0}".format(request))
     response_json ={}
     iot_array = []
     if request.method == "POST":
@@ -83,14 +103,27 @@ def getIotReadingErrors(request):
                     if (rv.datetime < oneHourLater):
                         iot_array.append(iot.name)
             response_json['response'] = iot_array                   
+            logger.debug("In getIotReadingErrors: JSON response ready with value:{0}".format(response_json))
+            
             return JsonResponse(data=response_json)
-        except ObjectDoesNotExist:
-            HttpResponse("404")
+        except ObjectDoesNotExistas as oe:
+            logger.warning("In getIotReadingErrors: ObjectDoesNotExist exception raised: {0}".format(oe))
+
+            return HttpResponse("404")
+        except Exception as ex:
+            logger.error("In getIotReadingErrors: Exception raised: {0}".format(ex))
+
+            return HttpResponse("404")
+    else:
+        logger.error("In getIotReadingErrors: wrong request method:{0}".format(request.method))
+
+        return HttpResponse("404")
 
 @csrf_exempt
 def getSensorDataForInterval(request):
     response_json = {}
     array = []
+    logger.debug("In getSensorDataForInterval: request:{0}".format(request))
         
     if request.method == "POST":
         retrieve_json_data = json.loads(request.body.decode('utf-8'))
@@ -112,75 +145,112 @@ def getSensorDataForInterval(request):
             response_json['id'] = iot_object.id
             response_json['name'] = iot_object.name
             response_json['results'] = array
+            logger.debug("In getSensorDataForInterval: JSON response ready with value:{0}".format(response_json))
+
             return JsonResponse(data=response_json)
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as oe:
+            logger.warning("In getSensorDataForInterval: ObjectDoesNotExist exception raised: {0}".format(oe))
+            
             return HttpResponse("404")
-        except IndexError:
+        except IndexError as ie:
+            logger.warning("In getSensorDataForInterval: IndexError exception raised: {0}".format(ie))
+            
             return HttpResponse("404")
         except Exception as e:
-            return HttpResponse("404" + e)
+            logger.error("In getSensorDataForInterval: Exception raised: {0}".format(e))
+            
+            return HttpResponse("404")
     else:
+        logger.error("In getSensorDataForInterval: wrong request method exception: {0}".format(request.method))
+            
         return HttpResponse("404")
 
 
 @csrf_exempt
 def getPeriodData(request):
+    logger.debug("In getPeriodData: request:{0}".format(request))
+    
     if request.method == "POST":
         retrieve_json_data = json.loads(request.body.decode('utf-8'))
         period = int(retrieve_json_data['period'])
         sensor_id = retrieve_json_data['id']
-        data = {}
+        response_json = {}
 
         try:
             iot_obj = IoT.objects.get(pk=sensor_id)
             readvalue = ReadValue.objects.filter(IoT_id=iot_obj).order_by('-datetime')[:period]
             array = []
-
             for rv in readvalue:
                 msg = {}
                 msg["value"] = rv.value
                 msg["datetime"] = rv.datetime
                 array.append(msg)
+            response_json['read'] = array
+            logger.debug("In getPeriodData: JSON response ready with value:{0}".format(response_json))
 
-            data['read'] = array
-
-            return JsonResponse(data=data)
-        except ObjectDoesNotExist:
+            return JsonResponse(data=response_json)
+        except ObjectDoesNotExist as oe:
+            logger.warning("In getPeriodData: ObjectDoesNotExist exception raised: {0}".format(oe))
+            
+            return HttpResponse("404")
+        except Exception as e:
+            logger.error("In getPeriodData: Exception raised: {0}".format(e))
+            
             return HttpResponse("404")
     else:
+        logger.error("In getPeriodData: Wrong request method: {0}".format(request.method))
+
         return HttpResponse("404")
 
 
 @csrf_exempt
 def getLastIotData(request, iot_id):
-    data = {}
-    iot = IoT.objects.get(pk=iot_id)
-    readvalue = ReadValue.objects.filter(IoT_id=iot).order_by('-datetime')[:1]
+    logger.debug("In getLastIotData: request:{0} and iot_id {1}".format(request, iot_id))
+    
+    response_json = {}
+    try: 
+        iot = IoT.objects.get(pk=iot_id)
+        readvalue = ReadValue.objects.filter(IoT_id=iot).order_by('-datetime')[:1]
 
-    for rv in readvalue:
-        data["value"] = rv.value
-        data["type"] = rv.type
-        data["datetime"] = rv.datetime
+        for rv in readvalue:
+            response_json["value"] = rv.value
+            response_json["type"] = rv.type
+            response_json["datetime"] = rv.datetime
+    except Exception as ex:
+            logger.error("In getLastIotData: Exception raised: {0}".format(ex))
 
-    return JsonResponse(data=data)
+            return HttpResponse("404")
+    
+    logger.debug("In getLastIotData: Response ready with message:{0}".format(response_json))
+    return JsonResponse(data=response_json)
 
 
 @csrf_exempt
-def getLastData(request, type, iot_id):
-    data = {}
-    iot = IoT.objects.get(pk=iot_id)
-    readvalue = ReadValue.objects.filter(type=type, IoT_id=iot).order_by('-datetime')[:1]
+def getLastData(request, type_value, iot_id):
+    logger.debug("In getLastData: request:{0}, type:{1} and iot_id: {2}".format(request, type_value, iot_id))
+    
+    response_json = {}
+    try:
+        iot = IoT.objects.get(pk=iot_id)
+        readvalue = ReadValue.objects.filter(type=type_value, IoT_id=iot).order_by('-datetime')[:1]
 
-    for rv in readvalue:
-        data["value"] = rv.value
-        data["type"] = rv.type
-        data["datetime"] = rv.datetime
+        for rv in readvalue:
+            response_json["value"] = rv.value
+            response_json["type"] = rv.type
+            response_json["datetime"] = rv.datetime
+    except Exception as ex:
+        logger.error("In getLastIotData: Exception raised: {0}".format(ex))
 
-    return JsonResponse(data=data)
+        return HttpResponse("404")
+
+    logger.debug("In getLastData: Response ready with message:{0}".format(response_json))
+    return JsonResponse(data=response_json)
 
 
 @csrf_exempt
 def ds18b20(request):
+    logger.debug("In ds18b20: request:{0}".format(request))
+    
     if request.method == "POST":
         retrieve_json_data = json.loads(request.body.decode('utf-8'))
         iot_pin = retrieve_json_data['pin']
@@ -196,15 +266,27 @@ def ds18b20(request):
                 datetime=datetime.datetime.now(),
                 IoT_id=iot_id
             )
+            logger.debug("In ds18b20: New record created, for JSON :{0}".format(retrieve_json_data))
+            
             return HttpResponse("200")
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as oe:
+            logger.warning("In ds18b20: ObjectDoesNotExist raised: {0} for JSON: {1}".format(oe, retrieve_json_data))
+
+            return HttpResponse("404")
+        except Exception as ex:
+            logger.error("In ds18b20: Exception raised: {0} for JSON: {1}".format(ex, retrieve_json_data))
+
             return HttpResponse("404")
     else:
+        logger.error("In ds18b20: wrong request method :{0}".format(request.method))
+    
         return HttpResponse("404")
 
 
 @csrf_exempt
 def store_sensor_data(request):
+    logger.debug("In store_sensor_data: request:{0}".format(request))
+    
     if request.method == "POST":
         retrieve_json_data = json.loads(request.body.decode('utf-8'))
         iot_pin = retrieve_json_data['pin']
@@ -221,55 +303,41 @@ def store_sensor_data(request):
                 datetime=datetime.datetime.now(),
                 IoT_id=iot_id
             )
+            logger.debug("In store_sensor_data: New record created, for JSON :{0}".format(retrieve_json_data))
+
             return HttpResponse("200")
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as oe:
+            logger.warning("In store_sensor_data: ObjectDoesNotExist raised: {0} for JSON: {1}".format(oe, retrieve_json_data))
+
+            return HttpResponse("404")
+        except Exception as ex:
+            logger.error("In store_sensor_data: Exception raised: {0} for JSON: {1}".format(ex, retrieve_json_data))
+
             return HttpResponse("404")
     else:
+        logger.error("In store_sensor_data: wrong request method :{0}".format(request.method))
+    
         return HttpResponse("404")
 
 
-
-@csrf_exempt
-def clujbike(request):
-    url = 'http://portal.clujbike.eu/Station/Read?Grid-sort=StationName-asc'
-    json_response = {}
-    json_station_array = []
-    json_station = {}
-
-    response = requests.post(url)
-    json_data = json.loads(response.text)
-    json_first_level = json_data['Data']
-
-    for level in json_first_level:
-        if (level['StationName'] == "G.Cosbuc"):
-            json_station['name'] = 'G.Cosbuc'
-            json_station['ocupate'] = level['OcuppiedSpots']
-            json_station['libere'] = level['EmptySpots']
-            json_station['status'] = level['Status']
-            json_station_array.append(json_station)
-            json_station={}
-        elif (level['StationName'] == "Piata Mihai Viteazul"):
-            json_station['name'] = 'Mihai.Viteazul'
-            json_station['ocupate'] = level['OcuppiedSpots']
-            json_station['libere'] = level['EmptySpots']
-            json_station['status'] = level['Status']
-            json_station_array.append(json_station)
-    json_response['data'] = json_station_array
-    
-    return JsonResponse(data=json_response)
-
 @csrf_exempt
 def getRelayStatus(request):
+    logger.debug("In getRelayStatus: request:{0}".format(request))
+
     url = "http://192.168.1.10/getState"
     json_data = {}
     json_data["SECRET_KEY"] = "__secret_key_here__"
     response = requests.post(url, data = json.dumps(json_data))
     json_data = json.loads(response.text)
-    
+    logger.debug("In getRelayStatus: resopnse ready:{0}".format(json_data))
+
     return JsonResponse(data=json_data)
+
 
 @csrf_exempt
 def setRelayStatus(request):
+    logger.debug("In setRelayStatus: request:{0}".format(request))
+
     url = "http://192.168.1.10/setState"
     retrieve_json_data = json.loads(request.body.decode('utf-8'))
     json_request = {}
@@ -278,14 +346,46 @@ def setRelayStatus(request):
     json_request["State"] = retrieve_json_data["Status"]
     response = requests.post(url, data = json.dumps(json_request))
     json_data = json.loads(response.text)
-    
+    logger.debug("In setRelayStatus: resopnse ready:{0}".format(json_data))
+
     return JsonResponse(data=json_data)
+
 
 @csrf_exempt
 def resetRelays(request):
+    logger.debug("In resetRelays: request:{0}".format(request))
+    
     url = "http://192.168.1.10/reset"
     json_data = "{\"SECRET_KEY\": \"__secret_key_here__\"}"
     response = requests.post(url, data =json_data)
     json_data = json.loads(response.text)
+    logger.debug("In resetRelays: resopnse ready:{0}".format(json_data))
     
     return JsonResponse(data=json_data)
+
+
+def scheduler(request):
+    logger.debug("In scheduler with request: {0}".format(request))
+    path = os.path.join(settings.BASE_DIR, "static/resources/json/scheduler.json")
+    json_file = open(path).read()
+    logger.debug("Sending Scheduler JSON: {0}".format(json_file))
+    context = {}
+    context["json"]=json_file
+    return render(request=request,
+                  context=context,
+                  template_name="sensors_actuators/scheduler.html")
+
+
+@csrf_exempt
+def store_scheduler(request):
+    logger.debug("In store_scheduler: request:{0} with content {1}".format(request, request.body.decode('utf-8')))
+    if request.method == "POST":
+        retrieve_json_data = json.loads(request.body.decode('utf-8'))
+        path = os.path.join(settings.BASE_DIR, "static/resources/json/scheduler.json")
+        logger.debug("write JSON message: {0} to path {1}.".format(retrieve_json_data, path))
+        with open(path, 'w') as outfile:
+            json.dump(retrieve_json_data, outfile)
+    else:
+        logger.error("Wrong request make. Expected POST.")
+
+    return HttpResponse(status=200)
