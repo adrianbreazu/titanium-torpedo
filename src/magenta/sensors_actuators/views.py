@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import JsonResponse
 from datetime import datetime
+from django.conf import settings
+import os
 import json
 import datetime
 import requests
@@ -360,3 +362,30 @@ def resetRelays(request):
     logger.debug("In resetRelays: resopnse ready:{0}".format(json_data))
     
     return JsonResponse(data=json_data)
+
+
+def scheduler(request):
+    logger.debug("In scheduler with request: {0}".format(request))
+    path = os.path.join(settings.BASE_DIR, "static/resources/json/scheduler.json")
+    json_file = open(path).read()
+    logger.debug("Sending Scheduler JSON: {0}".format(json_file))
+    context = {}
+    context["json"]=json_file
+    return render(request=request,
+                  context=context,
+                  template_name="sensors_actuators/scheduler.html")
+
+
+@csrf_exempt
+def store_scheduler(request):
+    logger.debug("In store_scheduler: request:{0} with content {1}".format(request, request.body.decode('utf-8')))
+    if request.method == "POST":
+        retrieve_json_data = json.loads(request.body.decode('utf-8'))
+        path = os.path.join(settings.BASE_DIR, "static/resources/json/scheduler.json")
+        logger.debug("write JSON message: {0} to path {1}.".format(retrieve_json_data, path))
+        with open(path, 'w') as outfile:
+            json.dump(retrieve_json_data, outfile)
+    else:
+        logger.error("Wrong request make. Expected POST.")
+
+    return HttpResponse(status=200)

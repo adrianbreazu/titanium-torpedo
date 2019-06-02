@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^resetRelays/$', views.resetRelays, name="reset_relays"),
     url(r'^getPeriodIntervalData/$', views.getSensorDataForInterval, name="getPeriodIntervalData"),
     url(r'^getIotReadingErrors/$', views.getIotReadingErrors, name="getIotReadingErrors"),
+    url(r'^scheduler/$', views.scheduler, name="scheduler"),
+    url(r'^store_scheduler/$', views.store_scheduler, name="store_scheduler"),
 ]
 
 handler404 = views.handler404
