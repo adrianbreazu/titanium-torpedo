@@ -22,7 +22,7 @@ dict = {
 
 def RelayJson(relay, state):
     json_value = '{"SECRET_KEY": "' + SECRET_KEY + '", "Relay":\"' + relay + '\", "Status":' + state + '}'
-    #MakeRequest(json_value)
+    MakeRequest(json_value)
     return json_value
 
 
