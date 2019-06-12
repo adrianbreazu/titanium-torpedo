@@ -44,7 +44,7 @@
 // getRelay status on first run
 (function() {
     $.ajax({
-        url: 'http://127.0.0.1:8080/sensors_actuators/getRelayStatus/',
+        url: host_url + '/sensors_actuators/getRelayStatus/',
         type: "POST",
         dataType: "json",
         contentType: "application/json",
@@ -82,7 +82,7 @@
 // setRelay code
 function startRelay(relayId, status) {
     $.ajax({
-        url: 'http://127.0.0.1:8080/sensors_actuators/setRelayStatus/',
+        url: host_url + '/sensors_actuators/setRelayStatus/',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json',

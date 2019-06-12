@@ -5,7 +5,7 @@ var selected_iot_id = 1;
     var $iot_list = $('#iot_list');
 
     $.ajax({
-        url: 'http://127.0.0.1:8080/sensors_actuators/get_iots/',
+        url: host_url + '/sensors_actuators/get_iots/',
         type: "POST",
         data: "{}",
         contentType: "application/json; charset=utf-8",
@@ -24,7 +24,7 @@ var selected_iot_id = 1;
                 $('<a>').attr('id', 'iot_li_' + iot_name).attr('href', '#').text(iot_name).on('click', function() { selected_iot_id = iot_id; }).appendTo(iot_li);
 
                 $.ajax({
-                    url: 'http://127.0.0.1:8080/sensors_actuators/json/' + iot_id,
+                    url: host_url + '/sensors_actuators/json/' + iot_id,
                     type: "POST",
                     data: "{}",
                     contentType: "application/json",
@@ -98,7 +98,7 @@ var selected_iot_id = 1;
     function reload_data() {
         // make ajax call
         $.ajax({
-            url: 'http://127.0.0.1:8080/sensors_actuators/get_temp_data/',
+            url: host_url + '/sensors_actuators/get_temp_data/',
             type: "POST",
             data: JSON.stringify({ "period": period_data, "id": selected_iot_id.toString() }),
             contentType: "application/json; charset=utf-8",

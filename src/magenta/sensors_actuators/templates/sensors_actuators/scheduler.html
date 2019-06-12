@@ -104,5 +104,6 @@
 {% endblock content %} {% block javascript%}
 <script type='text/javascript'>
     var json_msg = {{json | safe}};
+    var host_url = "http://{{request.get_host}}";
 </script>
 <script src="{% static 'resources/js/scheduler.js' %}"></script>{% endblock javascript %}

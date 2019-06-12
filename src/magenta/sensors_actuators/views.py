@@ -12,12 +12,27 @@ import json
 import datetime
 import requests
 import logging
-
+from pushbullet import PushBullet
 from .models import ReadValue, IoT
 
-logger = logging.getLogger(__name__)
 TEMPERATURE_TYPE = "temperature"
+JSON_PATH = "/magenta/static/resources/json"
+# TODO --- PLEASE CHANGE THIS PATH ---
+SRC_PATH = "/path/here/src"
+ENVIRONMENT_FILE = SRC_PATH + JSON_PATH + "/environment.json"
 
+logger = logging.getLogger(__name__)
+
+with open(ENVIRONMENT_FILE, "r") as env_file:
+    _json_environment = json.load(env_file)
+    _pushbullet_token = _json_environment["pushbullet"]["token"]
+    _actuators_env = _json_environment["links"]["actuators_urls"]
+    _secret_key = _json_environment["key"]["security_key"]
+try:
+    pb = PushBullet(_pushbullet_token)
+except:
+    print("Error cannot connect to pushbullet with token: {0}".format(pushbullet_token))
+    pb = None
 
 def handler404(request):
     logger.error ("404 generated for request:{0}".format(request))
@@ -324,9 +339,9 @@ def store_sensor_data(request):
 def getRelayStatus(request):
     logger.debug("In getRelayStatus: request:{0}".format(request))
 
-    url = "http://192.168.1.10/getState"
+    url = _actuators_env + "/getState"
     json_data = {}
-    json_data["SECRET_KEY"] = "__secret_key_here__"
+    json_data["SECRET_KEY"] = _secret_key
     response = requests.post(url, data = json.dumps(json_data))
     json_data = json.loads(response.text)
     logger.debug("In getRelayStatus: resopnse ready:{0}".format(json_data))
@@ -338,15 +353,17 @@ def getRelayStatus(request):
 def setRelayStatus(request):
     logger.debug("In setRelayStatus: request:{0}".format(request))
 
-    url = "http://192.168.1.10/setState"
+    url = _actuators_env + "/setState"
     retrieve_json_data = json.loads(request.body.decode('utf-8'))
     json_request = {}
-    json_request["SECRET_KEY"] = "__secret_key_here__"
+    json_request["SECRET_KEY"] = _secret_key
     json_request["Relay"] = retrieve_json_data["Relay"]
     json_request["State"] = retrieve_json_data["Status"]
     response = requests.post(url, data = json.dumps(json_request))
     json_data = json.loads(response.text)
     logger.debug("In setRelayStatus: resopnse ready:{0}".format(json_data))
+    if pb is not None:
+        pb.push_note("Sprinkler activated", "Relay {0} has been set to state {1} and with response {2}".format(retrieve_json_data["Relay"], retrieve_json_data["Status"], json_data))
 
     return JsonResponse(data=json_data)
 
@@ -355,8 +372,8 @@ def setRelayStatus(request):
 def resetRelays(request):
     logger.debug("In resetRelays: request:{0}".format(request))
     
-    url = "http://192.168.1.10/reset"
-    json_data = "{\"SECRET_KEY\": \"__secret_key_here__\"}"
+    url = _actuators_env + "/reset"
+    json_data = "{\"SECRET_KEY\": \"" + _secret_key + "\"}"
     response = requests.post(url, data =json_data)
     json_data = json.loads(response.text)
     logger.debug("In resetRelays: resopnse ready:{0}".format(json_data))

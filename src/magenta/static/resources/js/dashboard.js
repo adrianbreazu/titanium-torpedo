@@ -3,7 +3,7 @@ var selected_iot_id = 1;
 (function() {
     var $iot_list = $('#iot_list');
     $.ajax({
-        url: 'http://127.0.0.1:8080/sensors_actuators/get_iots/',
+        url: host_url + '/sensors_actuators/get_iots/',
         type: "POST",
         data: "{}",
         contentType: "application/json; charset=utf-8",
@@ -47,7 +47,7 @@ var selected_iot_id = 1;
             data_array = [];
 
             $.ajax({
-                url: 'http://127.0.0.1:8080/sensors_actuators/getPeriodIntervalData/',
+                url: host_url + '/sensors_actuators/getPeriodIntervalData/',
                 type: 'POST',
                 data: JSON.stringify(dataObject),
                 contentType: 'application/json; charset=utf-8',
@@ -91,7 +91,7 @@ var selected_iot_id = 1;
 //notify user if a sensor missed the data sending in the last hour
 (function() {
     $.ajax({
-        url: 'http://127.0.0.1:8080/sensors_actuators/getIotReadingErrors/',
+        url: host_url + '/sensors_actuators/getIotReadingErrors/',
         type: 'POST',
         data: '{}',
         contentType: 'application/json; charset=utf-8',
@@ -114,10 +114,10 @@ var selected_iot_id = 1;
 })();
 
 //populate data
+// TODO -- update sensor number
 (function() {
-    // add this for each sensor
     $.ajax({
-        url: 'http://127.0.0.1:8080/sensors_actuators/json/1',
+        url: host_url + '/sensors_actuators/json/1',
         type: 'POST',
         data: '{}',
         contentType: 'application/json; charset=utf-8',
@@ -125,6 +125,54 @@ var selected_iot_id = 1;
         async: false,
         success: function(message) {
             $('#temp_room').text(message['value']);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+    // TODO -- update sensor number
+    $.ajax({
+        url: host_url + '/sensors_actuators/json/2',
+        type: 'POST',
+        data: '{}',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: false,
+        success: function(message) {
+            $('#temp_room_2').text(message['value']);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+    // TODO -- update sensor number
+    $.ajax({
+        url: host_url + '/sensors_actuators/json/3',
+        type: 'POST',
+        data: '{}',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: false,
+        success: function(message) {
+            $('#temp_outside').text(message['value']);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+    // TODO -- update sensor number
+    $.ajax({
+        url: host_url + '/sensors_actuators/json/4',
+        type: 'POST',
+        data: '{}',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        async: false,
+        success: function(message) {
+            $('#pressure_outside').text(message['value']);
         },
         error: function(error) {
             console.log(error);
