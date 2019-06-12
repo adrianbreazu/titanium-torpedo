@@ -84,7 +84,7 @@ $('#submit').click(function() {
     duration_object.Flowers = $('#flowers').val();
     json_response.Duration = duration_object;
     $.ajax({
-        url: 'http://127.0.0.1:8080/sensors_actuators/store_scheduler/',
+        url: host_url + '/sensors_actuators/store_scheduler/',
         type: "POST",
         dataType: "json",
         contentType: "application/json",
