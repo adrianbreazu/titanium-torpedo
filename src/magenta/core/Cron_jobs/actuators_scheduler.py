@@ -67,30 +67,38 @@ def main():
                 value = int(_json_content["Duration"]["Front"])
                 print ("Start Front sprinkler for {0} seconds".format(value))
                 print(RelayJson(server_url, secret_key, "A", "1"))
+                if pb is not None:
+                    pb.push_note("Sprinkler started", "Start Front sprinkler for {0} seconds".format(value))
                 time.sleep(value)
                 print(RelayJson(server_url, secret_key, "A", "0"))
                 if pb is not None:
-                    pb.push_note("Sprinkler started", "Start Front sprinkler for {0} seconds".format(value))
+                    pb.push_note("Sprinkler stopped", "Stopped Front sprinkler after {0} seconds".format(value))
 
                 value = int(_json_content["Duration"]["Back"])
                 print ("Start Back sprinkler for {0} seconds".format(value))
                 print(RelayJson(server_url, secret_key, "B", "1"))
+                if pb is not None:
+                    pb.push_note("Sprinkler started", "Start Back sprinkler for {0} seconds".format(value))
                 time.sleep(value)
                 print(RelayJson(server_url, secret_key, "B", "0"))
                 if pb is not None:
-                    pb.push_note("Sprinkler started", "Start Back sprinkler for {0} seconds".format(value))
+                    pb.push_note("Sprinkler stopped", "Stopped Back sprinkler after {0} seconds".format(value))
                 
                 value = int(_json_content["Duration"]["Side"])
                 print ("Start Side sprinkler for {0} seconds".format(value))
                 print(RelayJson(server_url, secret_key, "C", "1"))
+                if pb is not None:
+                    pb.push_note("Sprinkler started", "Start Side sprinkler for {0} seconds".format(value))
                 time.sleep(value)
                 print(RelayJson(server_url, secret_key, "C", "0"))
                 if pb is not None:
-                    pb.push_note("Sprinkler started", "Start Side sprinkler for {0} seconds".format(value))
+                    pb.push_note("Sprinkler stopped", "Stopped Side sprinkler after {0} seconds".format(value))
                 
                 value = int(_json_content["Duration"]["Flowers"])
                 print ("Start Flowers sprinkler for {0} seconds".format(value))
                 print(RelayJson(server_url, secret_key, "D", "1"))
+                if pb is not None:
+                    pb.push_note("Sprinkler stopped", "Stopped Flowers sprinkler after {0} seconds".format(value))
                 time.sleep(value)
                 print(RelayJson(server_url, secret_key, "D", "0"))
                 if pb is not None:
